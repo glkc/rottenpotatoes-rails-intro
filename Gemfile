@@ -24,6 +24,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'tzinfo-data'
+gem 'activerecord-session_store'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -53,7 +54,7 @@ group :development, :test do
 end
 
 group :production do
-  gem 'pg' # for Heroku deployment
+  gem 'pg', '0.20' # for Heroku deployment
   gem 'rails_12factor'
 end
 

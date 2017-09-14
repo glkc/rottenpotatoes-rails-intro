@@ -11,11 +11,21 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @all_ratings = Movie.ratings  # to use it in index.html.haml
-    @title_h = "hilite" if params[:sort] == 'title'
-    @release_date_h = "hilite" if params[:sort] == 'release_date'
-    @selected = params[:ratings] ? params[:ratings].keys : @all_ratings
-    @movies = Movie.where(rating: @selected).order(params[:sort])
+    @all_ratings = Movie.ratings # to use it in index.html.haml
+    session[:title_h] = params[:sort] == 'title' ? "hilite" : nil
+    session[:release_date_h] = params[:sort] == 'release_date' ? "hilite" : nil
+    session[:selected] = if params[:ratings]
+                           params[:ratings].keys
+                         else
+                           session[:selected] ? session[:selected] : @all_ratings
+                         end
+    session[:sort] = params[:sort] ? params[:sort] : 'id'
+    # remember settings incase not provided
+    if params[:ratings].nil? || params[:sort].nil?
+      flash.keep
+      redirect_to movies_path(ratings: Hash[session[:selected].map {|s| [s, 1]}], sort: session[:sort])
+    end
+    @movies = Movie.where(rating: session[:selected]).order(session[:sort])
   end
 
   def new
