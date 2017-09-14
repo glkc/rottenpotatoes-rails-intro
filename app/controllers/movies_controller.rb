@@ -11,9 +11,11 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @all_ratings = Movie.ratings  # to use it in index.html.haml
     @title_h = "hilite" if params[:sort] == 'title'
     @release_date_h = "hilite" if params[:sort] == 'release_date'
-    @movies = Movie.order(params[:sort])
+    @selected = params[:ratings] ? params[:ratings].keys : @all_ratings
+    @movies = Movie.where(rating: @selected).order(params[:sort])
   end
 
   def new
