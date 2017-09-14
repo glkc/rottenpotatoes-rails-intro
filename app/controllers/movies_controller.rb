@@ -19,7 +19,11 @@ class MoviesController < ApplicationController
                          else
                            session[:selected] ? session[:selected] : @all_ratings
                          end
-    session[:sort] = params[:sort] ? params[:sort] : 'id'
+    session[:sort] = if params[:sort]
+                       params[:sort]
+                     else
+                       session[:sort] ? session[:sort] : 'id'
+                     end
     # remember settings incase not provided
     if params[:ratings].nil? || params[:sort].nil?
       flash.keep
